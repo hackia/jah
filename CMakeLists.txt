@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(jah)
+cmake_policy(SET CMP0135 NEW)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
@@ -52,7 +53,13 @@ install(TARGETS ji_core ji_domain ji_io DESTINATION lib)
 
 # Testing
 enable_testing()
+include(FetchContent)
 
+# Déclare la dépendance Google Test
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
 # Find GTest package
 find_package(GTest REQUIRED)
 
