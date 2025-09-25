@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.14.1)
 project(jah)
 
 cmake_policy(SET CMP0135 NEW)
@@ -18,13 +18,22 @@ if (ENABLE_CLANG_TIDY)
     endif ()
 endif ()
 
+# --- Gestion des dépendances ---
 include(FetchContent)
 
 FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
 )
-FetchContent_MakeAvailable(googletest)
+
+# AJOUT : On déclare la dépendance Boost
+FetchContent_Declare(
+        boost
+        URL https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.tar.gz
+)
+
+FetchContent_MakeAvailable(googletest boost)
+
 
 add_library(ji_core
         Ji.cpp Ji.hpp
