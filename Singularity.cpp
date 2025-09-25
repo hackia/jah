@@ -56,6 +56,8 @@ bool Singularity::check() {
       throw std::runtime_error("pom.xml not found");
     }
     break;
+  default:
+    throw std::runtime_error("Unknown language");
   }
   if (this->h->preCommit()) {
     this->accepted = true;

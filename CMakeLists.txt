@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14.1)
+cmake_minimum_required(VERSION 3.5)
 project(jah)
 
 cmake_policy(SET CMP0135 NEW)
@@ -26,13 +26,8 @@ FetchContent_Declare(
         URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
 )
 
-# AJOUT : On déclare la dépendance Boost
-FetchContent_Declare(
-        boost
-        URL https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.tar.gz
-)
 
-FetchContent_MakeAvailable(googletest boost)
+FetchContent_MakeAvailable(googletest)
 
 
 add_library(ji_core

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Atom.hpp"
+#include "Hook.hpp"
 
 namespace Jah {
 
@@ -30,7 +31,7 @@ public:
    * detected.
    */
   bool check();
-  bool isAccepted() const;
+  [[nodiscard]] bool isAccepted() const;
 
 private:
   /**

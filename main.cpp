@@ -1,4 +1,5 @@
 #include "Atom.hpp"
+#include "Hook.hpp"
 
 #include <filesystem>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <algorithm>
 #include <cstring>
 #include <fstream>
+#include <vector>
 
 using namespace Jah;
 using std::string;
