@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 4.0.2)
+cmake_minimum_required(VERSION 3.31.6)
 project(jah)
 
 cmake_policy(SET CMP0135 NEW)
@@ -18,7 +18,6 @@ if (ENABLE_CLANG_TIDY)
     endif ()
 endif ()
 
-# --- Gestion des dépendances ---
 include(FetchContent)
 
 FetchContent_Declare(
@@ -28,7 +27,6 @@ FetchContent_Declare(
 
 
 FetchContent_MakeAvailable(googletest)
-
 
 add_library(ji_core
         Ji.cpp Ji.hpp
