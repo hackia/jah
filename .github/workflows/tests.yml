@@ -1,0 +1,25 @@
+name: test
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure CMake
+        run: cmake -B build
+      - name: Build project
+        run: cmake --build build --config Release
+      - name: Install
+        run: sudo cmake --install build
+      - name: Run tests
+        working-directory: ./build
+        run: ctest -C Release
+

@@ -15,7 +15,7 @@ protected:
 };
 
 TEST_F(AtomTest, CreateAtom) {
-  Atom atom("type", "summary", "body", "footer");
+  const Atom atom("type", "summary", "body", "footer");
   EXPECT_EQ(atom.getType(), "type");
   EXPECT_EQ(atom.getSummary(), "summary");
   EXPECT_EQ(atom.getBody(), "body");
@@ -23,12 +23,12 @@ TEST_F(AtomTest, CreateAtom) {
 }
 
 TEST_F(AtomTest, ContainsIssue) {
-  Atom atom("type", "summary", "body", "Related to issue 123");
+  const Atom atom("type", "summary", "body", "Related to issue 123");
   EXPECT_TRUE(atom.containsIssue(123));
   EXPECT_FALSE(atom.containsIssue(456));
 }
 
 TEST_F(AtomTest, EmptyFooterIssueCheck) {
-  Atom atom("type", "summary", "body", "");
+  const Atom atom("type", "summary", "body", "");
   EXPECT_FALSE(atom.containsIssue(123));
 }

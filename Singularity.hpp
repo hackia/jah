@@ -2,7 +2,6 @@
 
 #include "Atom.hpp"
 
-#include <cxxopts.hpp>
 namespace Jah {
 
 class Singularity {
@@ -31,6 +30,7 @@ public:
    * detected.
    */
   bool check();
+  bool isAccepted() const;
 
 private:
   /**
@@ -41,7 +41,6 @@ private:
    * initialized to 0 by default and is set during the construction of the
    * Singularity object.
    */
-  unsigned int issue = 0;
   /**
    * @brief Pointer to the associated Atom instance.
    *
@@ -54,6 +53,7 @@ private:
   Atom *a;
   Language lang;
   Hook *h;
-  bool isAccepted = false;
+  bool accepted = false;
+  unsigned int issue;
 };
 } // namespace Jah

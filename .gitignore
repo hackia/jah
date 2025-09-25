@@ -23,3 +23,7 @@ jah
 .idea/
 .cmake
 .cache/
+jah_test[1]_include.cmake
+jah_test
+jah_test[1]_include.cmake
+jah_test[1]_tests.cmake

@@ -4,8 +4,7 @@
 #include <iostream>
 
 #include "Ji.hpp"
-#include "Singularity.hpp"
-
+#include <algorithm>
 #include <cstring>
 #include <fstream>
 
@@ -44,8 +43,8 @@ string prompt(const string &message,
   if (x.length() >= 2) {
     x.resize(x.length() - 2);
   }
-  if (!values.empty() &&
-      std::find(values.begin(), values.end(), x) == values.end()) {
+  if (const bool founded = find(values.begin(), values.end(), x) != values.end();
+      !values.empty() && !x.empty() && founded) {
     throw std::runtime_error("Invalid value");
   }
   return x;
@@ -63,8 +62,8 @@ int main(const int argc, const char **argv) {
   if (argc == 2 && strcmp(argv[1], "commit") == 0) {
 
     const Language l = fs::exists("CMakeLists.txt") ? C
-                 : fs::exists("Cargo.toml")   ? Rust
-                                              : NodeJs;
+                       : fs::exists("Cargo.toml")   ? Rust
+                                                    : NodeJs;
 
     if (Hook hook(l); hook.preCommit()->finally()) {
       string type, summary, body, footer, issues;

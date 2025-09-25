@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Atom.hpp"
-
 #include <string>
 #include <tuple>
 #include <vector>
@@ -12,6 +10,8 @@ enum Language {
   C,
   Rust,
   NodeJs,
+  PYTHON,
+  JAVA,
 };
 class Hook {
 public:

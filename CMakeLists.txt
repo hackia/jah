@@ -55,7 +55,6 @@ enable_testing()
 
 # Find GTest package
 find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
 
 add_executable(jah_test
         tests/JiTest.cpp
@@ -75,6 +74,7 @@ add_executable(jah_test
         tests/StorageTest.cpp
         tests/HookTest.cpp
 )
-
-target_link_libraries(jah_test ji_core ji_domain ji_io ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+include(GoogleTest)
+gtest_discover_tests(jah_test)
+target_link_libraries(jah_test PRIVATE ji_core ji_domain ji_io GTest::gtest_main pthread)
 add_test(NAME jah_unit_tests COMMAND jah_test)

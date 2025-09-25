@@ -31,6 +31,22 @@ Hook::Hook(const Language language) {
     this->to_run.emplace_back("Run tests", "npm run test", "Tests success",
                               "Tests failure");
     break;
+  case PYTHON:
+    this->to_run.emplace_back("Run pylint", "pylint *.py", "Linting success",
+                              "Linting failure");
+    this->to_run.emplace_back("Run mypy", "mypy .", "Type check success",
+                              "Type check failure");
+    this->to_run.emplace_back("Run pytest", "pytest", "Tests success",
+                              "Tests failure");
+    break;
+  case JAVA:
+    this->to_run.emplace_back("Run Maven compile", "mvn compile",
+                              "Compilation success", "Compilation failure");
+    this->to_run.emplace_back("Run Maven verify", "mvn verify",
+                              "Verification success", "Verification failure");
+    this->to_run.emplace_back("Run tests", "mvn test", "Tests success",
+                              "Tests failure");
+    break;
   }
 }
 
