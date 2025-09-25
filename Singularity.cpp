@@ -1,7 +1,6 @@
 #include "Singularity.hpp"
 #include "Hook.hpp"
 #include "Ji.hpp"
-
 #include <stdexcept>
 using namespace Jah;
 
@@ -32,27 +31,27 @@ bool Singularity::check() {
   }
   switch (this->lang) {
   case C:
-    if (fs::exists("CMakeLists.txt") == false) {
+    if (filesystem::exists("CMakeLists.txt") == false) {
       throw std::runtime_error("CMakeLists.txt not found");
     }
     break;
   case Rust:
-    if (fs::exists("Cargo.toml") == false) {
+    if (filesystem::exists("Cargo.toml") == false) {
       throw std::runtime_error("Cargo.toml not found");
     }
     break;
   case NodeJs:
-    if (fs::exists("package.json") == false) {
+    if (filesystem::exists("package.json") == false) {
       throw std::runtime_error("package.json not found");
     }
     break;
   case PYTHON:
-    if (fs::exists("setup.py") == false) {
+    if (filesystem::exists("setup.py") == false) {
       throw std::runtime_error("setup.py not found");
     }
     break;
   case JAVA:
-    if (fs::exists("pom.xml") == false) {
+    if (filesystem::exists("pom.xml") == false) {
       throw std::runtime_error("pom.xml not found");
     }
     break;
