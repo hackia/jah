@@ -1,7 +1,5 @@
 #pragma once
 
-#include <sys/types.h>
-
 #include <array>
 #include <cstdint>
 #include <filesystem>
@@ -10,7 +8,7 @@ using namespace std;
 
 namespace fs = filesystem;
 
-namespace Dualys {
+namespace Jah {
 constexpr array<uint8_t, 6> MAGIC = {0x4A, 0x61, 0x6A, 0x61, 0x37, 0x37};
 constexpr uint32_t VERSION = 0x00000001;
 
@@ -25,9 +23,9 @@ enum class ObjectType : uint8_t {
   TimeEntry = 0x05,
 };
 
-class Jah {
+class Ji {
  public:
-  int init();
-  bool isValid();
+  static int init();
+  static bool isValid();
 };
 }  // namespace Dualys

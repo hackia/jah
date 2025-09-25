@@ -1,11 +1,80 @@
-cmake_minimum_required(VERSION 4.1)
+cmake_minimum_required(VERSION 3.15)
 project(jah)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-add_library(ji Ji.cpp Ji.hpp)
+
+option(ENABLE_CLANG_TIDY "Enable clang-tidy linter" ON)
+if (ENABLE_CLANG_TIDY)
+    find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+    if (CLANG_TIDY_EXE)
+        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
+        message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
+    else ()
+        message(STATUS "clang-tidy not found; proceeding without it")
+    endif ()
+endif ()
+
+add_library(ji_core
+        Ji.cpp Ji.hpp
+        Branch.cpp Branch.hpp
+        Features.cpp Features.hpp
+        Forge.cpp Forge.hpp
+        Hub.cpp Hub.hpp
+        Ci.cpp Ci.hpp
+        View.cpp View.hpp
+        Queue.cpp Queue.hpp
+        Workflow.cpp Workflow.hpp
+        Singularity.cpp Singularity.hpp
+        Constellation.cpp Constellation.hpp
+        Discussions.cpp Discussions.hpp
+)
+
+add_library(ji_domain
+        Ticket.cpp Ticket.hpp
+        Atom.cpp Atom.hpp
+)
+
+add_library(ji_io
+        Storage.cpp Storage.hpp
+        Hook.cpp Hook.hpp
+)
+
 add_executable(jah main.cpp)
-target_link_libraries(jah ji)
+
+# Link libraries
+target_link_libraries(jah ji_core ji_domain ji_io)
+
+# Install rules
 install(TARGETS jah DESTINATION bin)
 install(FILES Ji.hpp DESTINATION include)
-install(TARGETS ji DESTINATION lib)
+install(TARGETS ji_core ji_domain ji_io DESTINATION lib)
 
+# Testing
+enable_testing()
+
+# Find GTest package
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+add_executable(jah_test
+        tests/JiTest.cpp
+        tests/BranchTest.cpp
+        tests/FeaturesTest.cpp
+        tests/ForgeTest.cpp
+        tests/HubTest.cpp
+        tests/CiTest.cpp
+        tests/ViewTest.cpp
+        tests/QueueTest.cpp
+        tests/WorkflowTest.cpp
+        tests/SingularityTest.cpp
+        tests/ConstellationTest.cpp
+        tests/DiscussionsTest.cpp
+        tests/TicketTest.cpp
+        tests/AtomTest.cpp
+        tests/StorageTest.cpp
+        tests/HookTest.cpp
+)
+
+target_link_libraries(jah_test ji_core ji_domain ji_io ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} pthread)
+add_test(NAME jah_unit_tests COMMAND jah_test)
