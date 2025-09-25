@@ -15,7 +15,13 @@ if (ENABLE_CLANG_TIDY)
         message(STATUS "clang-tidy not found; proceeding without it")
     endif ()
 endif ()
+include(FetchContent)
 
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+find_package(GTest REQUIRED)
 add_library(ji_core
         Ji.cpp Ji.hpp
         Branch.cpp Branch.hpp
@@ -53,15 +59,7 @@ install(TARGETS ji_core ji_domain ji_io DESTINATION lib)
 
 # Testing
 enable_testing()
-include(FetchContent)
 
-# Déclare la dépendance Google Test
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-)
-# Find GTest package
-find_package(GTest REQUIRED)
 
 add_executable(jah_test
         tests/JiTest.cpp
