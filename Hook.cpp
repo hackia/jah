@@ -62,6 +62,5 @@ Hook *Hook::preCommit() {
   }
   return this;
 }
-Hook *Hook::afterCommit() { return this; }
 
 int Hook::finally() const { return this->ko > 0 ? 0 : 1; }

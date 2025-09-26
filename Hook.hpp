@@ -32,11 +32,9 @@ public:
    */
   explicit Hook(Language language);
   Hook *preCommit();
-  Hook *afterCommit();
   [[nodiscard]] int finally() const;
 
 private:
-  Language l = C;
   unsigned int ko = 0;
   unsigned int ok = 0;
   std::vector<std::tuple<std::string, std::string, std::string, std::string>>
