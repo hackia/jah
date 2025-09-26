@@ -63,11 +63,11 @@ int main(const int argc, const char **argv) {
   }
   if (argc == 2 && strcmp(argv[1], "commit") == 0) {
 
-    const Language l = fs::exists("CMakeLists.txt") ? C
-                           : fs::exists("Cargo.toml")   ? Rust
-                           : fs::exists("package.json") ? NodeJs
-                           : fs::exists("setup.py")     ? PYTHON
-                           : fs::exists("pom.xml")      ? JAVA
+    const Language l = exists("CMakeLists.txt") ? C
+                           : exists("Cargo.toml")   ? Rust
+                           : exists("package.json") ? NodeJs
+                           : exists("setup.py")     ? PYTHON
+                           : exists("pom.xml")      ? JAVA
                                                         : C;
 
 

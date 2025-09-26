@@ -89,9 +89,6 @@ enum BreakingChanges {
  */
 class Features {
 public:
-  Features(BreakingChanges bc, Feat feat);
-private:
-  BreakingChanges bc;
-  Feat feat;
+  Features();
 };
 } // namespace Jah
