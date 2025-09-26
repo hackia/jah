@@ -9,10 +9,11 @@
 
 using namespace Jah;
 using namespace std;
+using namespace std::filesystem;
 
 int Ji::init() {
-  const filesystem::path repo_dir = JAH_DIRECTORY_NAME;
-  const filesystem::path db_file = JAH_DATABASE;
+  const path repo_dir = JAH_DIRECTORY_NAME;
+  const path db_file = JAH_DATABASE;
 
   // If the database already exists, consider the repo initialized
   if (exists(db_file)) {
@@ -25,7 +26,7 @@ int Ji::init() {
     if (!exists(repo_dir)) {
       create_directory(repo_dir);
     }
-  } catch (const filesystem::filesystem_error &e) {
+  } catch (const filesystem_error &e) {
     cerr << e.what() << endl;
     return EXIT_FAILURE;
   }

@@ -64,8 +64,12 @@ int main(const int argc, const char **argv) {
   if (argc == 2 && strcmp(argv[1], "commit") == 0) {
 
     const Language l = fs::exists("CMakeLists.txt") ? C
-                       : fs::exists("Cargo.toml")   ? Rust
-                                                    : NodeJs;
+                           : fs::exists("Cargo.toml")   ? Rust
+                           : fs::exists("package.json") ? NodeJs
+                           : fs::exists("setup.py")     ? PYTHON
+                           : fs::exists("pom.xml")      ? JAVA
+                                                        : C;
+
 
     if (Hook hook(l); hook.preCommit()->finally()) {
       string type, summary, body, footer, issues;
