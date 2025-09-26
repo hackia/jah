@@ -7,7 +7,24 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX true)
+endif()
+
+if(APPLE)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+elseif(BSD)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+elseif(LINUX)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+elseif(UNIX)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+elseif(WIN32)
+    # Windows
+else()
+    message(FATAL_ERROR "Unsupported system: ${CMAKE_SYSTEM_NAME}")
+endif()
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
