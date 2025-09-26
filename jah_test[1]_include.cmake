@@ -1,5 +1,0 @@
-if(EXISTS "/home/hackia/Dualys/jah/jah_test[1]_tests.cmake")
-  include("/home/hackia/Dualys/jah/jah_test[1]_tests.cmake")
-else()
-  add_test(jah_test_NOT_BUILT jah_test_NOT_BUILT)
-endif()

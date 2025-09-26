@@ -1,30 +1,19 @@
 cmake_minimum_required(VERSION 3.31.6)
-project(jah)
+project(jah VERSION 0.1.0 LANGUAGES CXX)
 
-cmake_policy(SET CMP0135 NEW)
+set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-
-option(ENABLE_CLANG_TIDY "Enable clang-tidy linter" ON)
-if (ENABLE_CLANG_TIDY)
-    find_program(CLANG_TIDY_EXE NAMES clang-tidy)
-    if (CLANG_TIDY_EXE)
-        set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
-        message(STATUS "clang-tidy found: ${CLANG_TIDY_EXE}")
-    else ()
-        message(STATUS "clang-tidy not found; proceeding without it")
-    endif ()
-endif ()
-
 include(FetchContent)
-
 FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
-
 
 FetchContent_MakeAvailable(googletest)
 
@@ -42,19 +31,21 @@ add_library(ji_core
         Constellation.cpp Constellation.hpp
         Discussions.cpp Discussions.hpp
 )
+target_include_directories(ji_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(ji_domain
         Ticket.cpp Ticket.hpp
         Atom.cpp Atom.hpp
 )
+target_include_directories(ji_domain PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_library(ji_io
         Storage.cpp Storage.hpp
         Hook.cpp Hook.hpp
 )
+target_include_directories(ji_io PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(jah main.cpp)
-
 target_link_libraries(jah PRIVATE ji_core ji_domain ji_io)
 
 enable_testing()
@@ -85,8 +76,20 @@ target_link_libraries(jah_test
         ji_io
         GTest::gtest_main
 )
+
+include(GNUInstallDirs)
 include(GoogleTest)
 gtest_discover_tests(jah_test)
-install(TARGETS jah DESTINATION bin)
-install(FILES Ji.hpp DESTINATION include)
-install(TARGETS ji_core ji_domain ji_io DESTINATION lib)
+
+install(TARGETS jah
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(FILES Ji.hpp
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jah
+)
+
+install(TARGETS ji_core ji_domain ji_io
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
