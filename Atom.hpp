@@ -6,7 +6,10 @@ namespace Jah {
 
 constexpr int ATOM_REFUSED = 1;
 constexpr int ATOM_ACCEPTED = 0;
-
+constexpr int ATOM_LOG_LIMIT = 10;
+const auto COMMITS_DATABASE = ".jah/commits.ji";
+const auto JAH_USERNAME = getenv("JAH_USERNAME");
+const auto JAH_EMAIL = getenv("JAH_EMAIL");
 /**
  * @brief Represents an Atom object with distinct properties such as type,
  *        summary, body, and footer.
@@ -17,8 +20,7 @@ constexpr int ATOM_ACCEPTED = 0;
  */
 class Atom {
 public:
-
-  Atom(string type, string summary, string body, string footer);
+  Atom(string type, string summary, string body, string footer, string id);
   /**
    * @brief Retrieves the type associated with the Atom instance.
    *
@@ -55,16 +57,31 @@ public:
    */
   [[nodiscard]] string getFooter() const;
   /**
-   * @brief Checks if the Atom instance contains the specified issue identifier.
+   * @brief Saves the Atom object's state to a file within a specific directory.
    *
-   * Searches the footer of the Atom instance to determine if it contains
-   * both the word "issue" and the provided issue identifier.
+   * This method writes the type, summary, body, and footer of the Atom instance
+   * to a binary file located at ".jah/ji.jah". The save operation only proceeds
+   * if the required directory and file exist. If the save is successful, a
+   * confirmation is displayed; otherwise, an error message is shown.
    *
-   * @param id The unique identifier of the issue to search for.
-   * @return True if the Atom footer contains the specified issue identifier;
-   *         otherwise, false.
+   * @return An integer indicating the exit status of the save operation.
+   *         Returns EXIT_SUCCESS if the data is saved successfully, or
+   *         EXIT_FAILURE if an error occurs or prerequisites are not met.
    */
-  [[nodiscard]] bool containsIssue(unsigned int id) const;
+  [[nodiscard]] int save() const;
+  /**
+   * @brief Displays the commit history log in reverse order.
+   *
+   * This static method reads a commit history file, retrieves its content,
+   * and prints each commit in reverse chronological order to the console.
+   * If the file cannot be opened, an error message is displayed, and the method
+   * terminates with a failure code.
+   *
+   * @return An integer indicating the exit status of the operation.
+   *         Returns EXIT_SUCCESS if the log is displayed successfully,
+   *         or EXIT_FAILURE if an error occurs.
+   */
+  static int log(int limit);
   /**
    * @brief Retrieves the status code indicating that the Atom instance is
    * accepted.
@@ -121,5 +138,7 @@ private:
    * to store and manage the main textual data for the entity.
    */
   string body;
+
+  string issue;
 };
 } // namespace Jah

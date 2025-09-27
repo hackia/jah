@@ -7,23 +7,29 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if (CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX true)
-endif()
+endif ()
 
-if(APPLE)
+if (APPLE)
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-elseif(BSD)
+elseif (BSD)
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-elseif(LINUX)
+elseif (LINUX)
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-elseif(UNIX)
+elseif (UNIX)
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
-elseif(WIN32)
-    # Windows
-else()
+elseif (WIN32)
+    if (MSVC)
+        add_compile_options(/W4 /WX /permissive- /experimental:external /external:anglebrackets /external:W0)
+    else ()
+        add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+    endif ()
+else ()
     message(FATAL_ERROR "Unsupported system: ${CMAKE_SYSTEM_NAME}")
-endif()
+endif ()
+
+find_package(PostgreSQL REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -54,7 +60,7 @@ add_library(ji_domain
         Ticket.cpp Ticket.hpp
         Atom.cpp Atom.hpp
 )
-target_include_directories(ji_domain PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ji_domain PRIVATE ${PostgreSQL_LIBRARIES})
 
 add_library(ji_io
         Storage.cpp Storage.hpp

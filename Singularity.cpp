@@ -4,8 +4,8 @@
 #include <stdexcept>
 using namespace Jah;
 
-Singularity::Singularity(const unsigned int id, Atom *atom,
-                         const Language language, Hook *hook) {
+Singularity::Singularity(const char *id, Atom *atom, const Language language,
+                         Hook *hook) {
   if (atom == nullptr) {
     throw std::invalid_argument("Atom pointer cannot be null");
   }
@@ -26,32 +26,33 @@ bool Singularity::check() {
   if (this->a == nullptr) {
     throw std::runtime_error("Atom pointer is null");
   }
-  if (!this->a->containsIssue(issue)) {
+  if (!this->a->getFooter().empty() &&
+      this->a->getFooter().contains(this->issue)) {
     throw std::runtime_error("No issue detected in Atom");
   }
   switch (this->lang) {
   case C:
-    if (filesystem::exists("CMakeLists.txt") == false) {
+    if (exists("CMakeLists.txt") == false) {
       throw std::runtime_error("CMakeLists.txt not found");
     }
     break;
   case Rust:
-    if (filesystem::exists("Cargo.toml") == false) {
+    if (exists("Cargo.toml") == false) {
       throw std::runtime_error("Cargo.toml not found");
     }
     break;
   case NodeJs:
-    if (filesystem::exists("package.json") == false) {
+    if (exists("package.json") == false) {
       throw std::runtime_error("package.json not found");
     }
     break;
   case PYTHON:
-    if (filesystem::exists("setup.py") == false) {
+    if (exists("setup.py") == false) {
       throw std::runtime_error("setup.py not found");
     }
     break;
   case JAVA:
-    if (filesystem::exists("pom.xml") == false) {
+    if (exists("pom.xml") == false) {
       throw std::runtime_error("pom.xml not found");
     }
     break;

@@ -3,7 +3,6 @@
 #include <array>
 #include <cstdint>
 #include <filesystem>
-
 using namespace std;
 using namespace std::filesystem;
 
@@ -23,7 +22,8 @@ enum class ObjectType : uint8_t {
 
 class Ji {
 public:
-  static int init();
+  static int init(const string &hostname, const string &port, const string &dbname, const string &user,
+                  const string &password, const string &username, const string &email);
   static bool isValid();
 };
 } // namespace Jah

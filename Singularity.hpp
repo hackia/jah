@@ -15,7 +15,7 @@ public:
    * @param language The language associated with the Atom.
    * @param hook
    */
-  Singularity(unsigned id, Atom *atom, Language language, Hook *hook);
+  Singularity(const char *id, Atom *atom, Language language, Hook *hook);
 
   /**
    * @brief Checks if the associated Atom contains any issues.
@@ -55,6 +55,6 @@ private:
   Language lang;
   Hook *h;
   bool accepted = false;
-  unsigned int issue;
+  const char *issue;
 };
 } // namespace Jah
