@@ -81,7 +81,12 @@ public:
    * current view.
    */
   [[nodiscard]] std::vector<fs::path>
+
   filter(const std::vector<fs::path> &paths) const;
+
+  int ls() const;
+
+
   /**
    * Represents the role or responsibility of a user interacting with the
    * system. Determines the type of files the user can access or view based on

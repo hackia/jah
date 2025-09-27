@@ -1,15 +1,8 @@
 #pragma once
+#include "Config.hpp"
 #include <string>
 using namespace std;
-
 namespace Jah {
-
-constexpr int ATOM_REFUSED = 1;
-constexpr int ATOM_ACCEPTED = 0;
-constexpr int ATOM_LOG_LIMIT = 10;
-const auto COMMITS_DATABASE = ".jah/commits.ji";
-const auto JAH_USERNAME = getenv("JAH_USERNAME");
-const auto JAH_EMAIL = getenv("JAH_EMAIL");
 /**
  * @brief Represents an Atom object with distinct properties such as type,
  *        summary, body, and footer.
@@ -20,7 +13,7 @@ const auto JAH_EMAIL = getenv("JAH_EMAIL");
  */
 class Atom {
 public:
-  Atom(string type, string summary, string body, string footer, string id);
+  Atom(string type, string summary, string body, string note,string footer, string id);
   /**
    * @brief Retrieves the type associated with the Atom instance.
    *
@@ -68,7 +61,8 @@ public:
    *         Returns EXIT_SUCCESS if the data is saved successfully, or
    *         EXIT_FAILURE if an error occurs or prerequisites are not met.
    */
-  [[nodiscard]] int save() const;
+  [[nodiscard]] int save(const Config &config) const;
+  static int log(int limit, const Config &config);
   /**
    * @brief Displays the commit history log in reverse order.
    *
@@ -81,7 +75,7 @@ public:
    *         Returns EXIT_SUCCESS if the log is displayed successfully,
    *         or EXIT_FAILURE if an error occurs.
    */
-  static int log(int limit);
+
   /**
    * @brief Retrieves the status code indicating that the Atom instance is
    * accepted.
@@ -140,5 +134,7 @@ private:
   string body;
 
   string issue;
+
+  string note;
 };
 } // namespace Jah

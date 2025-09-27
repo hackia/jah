@@ -41,7 +41,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_library(ji_core
-        Ji.cpp Ji.hpp
+        Ji.cpp Ji.hpp Config.cpp Config.hpp Model.cpp Model.hpp Controller.cpp Controller.hpp
         Branch.cpp Branch.hpp
         Features.cpp Features.hpp
         Forge.cpp Forge.hpp
@@ -60,7 +60,7 @@ add_library(ji_domain
         Ticket.cpp Ticket.hpp
         Atom.cpp Atom.hpp
 )
-target_link_libraries(ji_domain PRIVATE ${PostgreSQL_LIBRARIES})
+target_link_libraries(ji_domain PRIVATE ji_core ${PostgreSQL_LIBRARIES})
 
 add_library(ji_io
         Storage.cpp Storage.hpp

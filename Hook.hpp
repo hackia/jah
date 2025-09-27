@@ -31,6 +31,7 @@ public:
    * Atom details.
    */
   explicit Hook(Language language);
+  static int run();
   Hook *preCommit();
   [[nodiscard]] int finally() const;
 

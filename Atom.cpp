@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <filesystem>
-#include <fstream>
 #include <iostream>
 #include <libpq-fe.h>
 #include <string>
@@ -10,34 +9,30 @@
 using namespace Jah;
 using namespace std;
 
-Atom::Atom(string type, string summary, string body, string footer, string id)
-    : type(std::move(type)), summary(std::move(summary)),
-      footer(std::move(footer)), body(std::move(body)), issue(std::move(id)) {}
+const auto JAH_USERNAME = getenv("JAH_USERNAME");
+const auto JAH_EMAIL = getenv("JAH_EMAIL");
+
+Atom::Atom(string type, string summary, string body, string note, string footer,
+           string id)
+    : type(std::move(type)), summary(std::move(summary)), footer(std::move(footer)),
+      body(std::move(body)), issue(std::move(id)), note(std::move(note)) {}
 
 string Atom::getType() const { return type; }
 string Atom::getSummary() const { return summary; }
 string Atom::getBody() const { return body; }
 string Atom::getFooter() const { return footer; }
 
-int Atom::save() const {
-  const char *host = getenv("PG_HOST") ? getenv("PG_HOST") : "localhost";
-  const char *port = getenv("PG_PORT") ? getenv("PG_PORT") : "5432";
-  const char *dbname = getenv("PG_DBNAME") ? getenv("PG_DBNAME") : "jah";
-  const char *user = getenv("PG_USER") ? getenv("PG_USER") : "postgres";
-  const char *password =
-      getenv("PG_PASSWORD") ? getenv("PG_PASSWORD") : "postgres";
-
-  const string connStr = "host=" + string(host) + " port=" + string(port) +
-                         " dbname=" + string(dbname) + " user=" + string(user) +
-                         " password=" + string(password);
-
+int Atom::save(const Config &config) const {
+  const string connStr = "host=" + config.pg_host + " port=" + config.pg_port +
+                         " dbname=" + config.pg_dbname +
+                         " user=" + config.pg_user +
+                         " password=" + config.pg_password;
   PGconn *conn = PQconnectdb(connStr.c_str());
   if (PQstatus(conn) != CONNECTION_OK) {
     cerr << "Connection to database failed: " << PQerrorMessage(conn) << endl;
     PQfinish(conn);
     return EXIT_FAILURE;
   }
-
   const string message = "[" + to_string(std::time(nullptr)) + "] " +
                          "(author: " + string(JAH_USERNAME) + " <" +
                          string(JAH_EMAIL) + ">) " + type + ": " + summary +
@@ -64,17 +59,11 @@ int Atom::save() const {
   cout << "commited" << endl;
   return EXIT_SUCCESS;
 }
-int Atom::log(const int limit) {
-  const char *host = getenv("PG_HOST") ? getenv("PG_HOST") : "localhost";
-  const char *port = getenv("PG_PORT") ? getenv("PG_PORT") : "5432";
-  const char *dbname = getenv("PG_DBNAME") ? getenv("PG_DBNAME") : "jah";
-  const char *user = getenv("PG_USER") ? getenv("PG_USER") : "postgres";
-  const char *password =
-      getenv("PG_PASSWORD") ? getenv("PG_PASSWORD") : "postgres";
-
-  const string connStr = "host=" + string(host) + " port=" + string(port) +
-                         " dbname=" + string(dbname) + " user=" + string(user) +
-                         " password=" + string(password);
+int Atom::log(const int limit, const Config &config) {
+  const string connStr = "host=" + config.pg_host + " port=" + config.pg_port +
+                         " dbname=" + config.pg_dbname +
+                         " user=" + config.pg_user +
+                         " password=" + config.pg_password;
 
   PGconn *conn = PQconnectdb(connStr.c_str());
   if (PQstatus(conn) != CONNECTION_OK) {
@@ -105,5 +94,5 @@ int Atom::log(const int limit) {
   PQfinish(conn);
   return EXIT_SUCCESS;
 }
-int Atom::accepted() { return ATOM_ACCEPTED; }
-int Atom::refused() { return ATOM_REFUSED; }
+int Atom::accepted() { return 0; }
+int Atom::refused() { return 1; }

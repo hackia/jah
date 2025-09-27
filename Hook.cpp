@@ -1,10 +1,13 @@
 #include "Hook.hpp"
-
+#include <cstring>
 #include <iostream>
 #include <ostream>
+#include <filesystem>
 
 using namespace Jah;
 using namespace std;
+namespace fs = std::filesystem;
+
 Hook::Hook(const Language language) {
   switch (language) {
   case C:
@@ -48,6 +51,34 @@ Hook::Hook(const Language language) {
                               "Tests failure");
     break;
   }
+}
+
+int Hook::run() {
+  vector<Language> l;
+  for (const auto support = {"C", "Rust", "NodeJs", "PYTHON", "JAVA", "C"};
+       auto &s : support) {
+    if (strcmp(s, "C") == 0 && fs::exists("CMakeLists.txt")) {
+      l.push_back(C);
+    }
+    if (strcmp(s, "Rust") == 0 && fs::exists("Cargo.toml")) {
+      l.push_back(Rust);
+    }
+    if (strcmp(s, "NodeJs") == 0 && fs::exists("package.json")) {
+      l.push_back(NodeJs);
+    }
+    if (strcmp(s, "PYTHON") == 0 && fs::exists(".py")) {
+      l.push_back(PYTHON);
+    }
+    if (strcmp(s, "JAVA") == 0 && fs::exists("pom.xml")) {
+      l.push_back(JAVA);
+    }
+  }
+  for (const auto &s : l) {
+    if (Hook h(s); h.preCommit()->finally() == false) {
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
 }
 
 Hook *Hook::preCommit() {
