@@ -15,15 +15,19 @@ namespace Jah {
  */
 class Config {
 public:
-
-  Config(string username, string password, string host,
-         string port, string base);
+  Config();
+  int initialize();
+  [[nodiscard]] string getAuthor() const;
+  [[nodiscard]] string getEmail() const;
   [[nodiscard]] string getUsername() const;
   [[nodiscard]] string getPassword() const;
   [[nodiscard]] string getHost() const;
   [[nodiscard]] string getPort() const;
   [[nodiscard]] string getDatabase() const;
+
 private:
+  string author;
+  string email;
   string username;
   string password;
   string host;

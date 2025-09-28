@@ -14,6 +14,7 @@ namespace Jah {
 class Atom {
 public:
   Atom(string type, string summary, string body, string note,string footer, string id);
+  [[nodiscard]] string getHash(const Config& config) const;
   /**
    * @brief Retrieves the type associated with the Atom instance.
    *
@@ -49,6 +50,7 @@ public:
    * @return A string representing the footer of the Atom.
    */
   [[nodiscard]] string getFooter() const;
+  [[nodiscard]] string getNote() const;
   /**
    * @brief Saves the Atom object's state to a file within a specific directory.
    *

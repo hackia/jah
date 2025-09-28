@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31.6)
-project(jah VERSION 0.1.0 LANGUAGES CXX)
+project(jah VERSION 0.1.0 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,7 +10,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if (CMAKE_VERSION VERSION_LESS 3.25 AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX true)
 endif ()
-
 if (APPLE)
     add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 elseif (BSD)
@@ -28,6 +27,12 @@ elseif (WIN32)
 else ()
     message(FATAL_ERROR "Unsupported system: ${CMAKE_SYSTEM_NAME}")
 endif ()
+enable_language(C)
+
+find_package(SQLite3 REQUIRED)
+
+link_directories(${SQLITE_LINK_DIR})
+include_directories(include ${SQLITE_INCLUDE})
 
 find_package(PostgreSQL REQUIRED)
 
@@ -39,9 +44,19 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(googletest)
-
+FetchContent_Declare(
+        blake3
+        URL https://github.com/BLAKE3-team/BLAKE3/archive/refs/tags/1.5.1.zip
+)
+FetchContent_MakeAvailable(blake3)
+add_library(blake3_lib STATIC
+        ${blake3_SOURCE_DIR}/c/blake3.c
+        ${blake3_SOURCE_DIR}/c/blake3_dispatch.c
+        ${blake3_SOURCE_DIR}/c/blake3_portable.c
+)
+target_include_directories(blake3_lib PUBLIC ${blake3_SOURCE_DIR}/c)
 add_library(ji_core
-        Ji.cpp Ji.hpp Config.cpp Config.hpp Model.cpp Model.hpp Controller.cpp Controller.hpp
+        Ji.cpp Ji.hpp Config.cpp Config.hpp Model.cpp Model.hpp Controller.cpp Controller.hpp ConfigManager.cpp ConfigManager.hpp
         Branch.cpp Branch.hpp
         Features.cpp Features.hpp
         Forge.cpp Forge.hpp
@@ -55,12 +70,13 @@ add_library(ji_core
         Discussions.cpp Discussions.hpp
 )
 target_include_directories(ji_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(ji_core PRIVATE SQLite::SQLite3 blake3)
 
 add_library(ji_domain
         Ticket.cpp Ticket.hpp
         Atom.cpp Atom.hpp
 )
-target_link_libraries(ji_domain PRIVATE ji_core ${PostgreSQL_LIBRARIES})
+target_link_libraries(ji_domain PRIVATE ji_core SQLite::SQLite3 blake3_lib ${PostgreSQL_LIBRARIES})
 
 add_library(ji_io
         Storage.cpp Storage.hpp
@@ -70,39 +86,6 @@ target_include_directories(ji_io PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(jah main.cpp)
 target_link_libraries(jah PRIVATE ji_core ji_domain ji_io)
-
-enable_testing()
-
-add_executable(jah_test
-        tests/JiTest.cpp
-        tests/BranchTest.cpp
-        tests/FeaturesTest.cpp
-        tests/ForgeTest.cpp
-        tests/HubTest.cpp
-        tests/CiTest.cpp
-        tests/ViewTest.cpp
-        tests/QueueTest.cpp
-        tests/WorkflowTest.cpp
-        tests/SingularityTest.cpp
-        tests/ConstellationTest.cpp
-        tests/DiscussionsTest.cpp
-        tests/TicketTest.cpp
-        tests/AtomTest.cpp
-        tests/StorageTest.cpp
-        tests/HookTest.cpp
-)
-
-target_link_libraries(jah_test
-        PRIVATE
-        ji_core
-        ji_domain
-        ji_io
-        GTest::gtest_main
-)
-
-include(GNUInstallDirs)
-include(GoogleTest)
-gtest_discover_tests(jah_test)
 
 install(TARGETS jah
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

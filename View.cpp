@@ -1,6 +1,8 @@
 #include "View.hpp"
 #include <algorithm>
 #include <cctype>
+#include <chrono>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -8,6 +10,35 @@ using namespace Jah;
 using namespace std;
 
 namespace {
+std::vector<std::string> readIgnorePatterns() {
+  std::vector<std::string> patterns;
+  static const std::vector<std::string> ignoreFiles = {".gitignore", ".ignore"};
+
+  for (const auto &ignoreFile : ignoreFiles) {
+    if (fs::exists(ignoreFile)) {
+      std::ifstream file(ignoreFile);
+      std::string line;
+      while (std::getline(file, line)) {
+        if (!line.empty() && line[0] != '#') {
+          patterns.push_back(line);
+        }
+      }
+    }
+  }
+  return patterns;
+}
+
+bool isIgnored(const fs::path &p) {
+  static const auto patterns = readIgnorePatterns();
+  const std::string path = p.string();
+
+  for (const auto &pattern : patterns) {
+    if (path.find(pattern) != std::string::npos) {
+      return true;
+    }
+  }
+  return false;
+}
 
 std::string toLower(std::string s) {
   std::ranges::transform(s, s.begin(), [](unsigned char c) {
@@ -137,33 +168,67 @@ std::vector<fs::path> View::filter(const std::vector<fs::path> &paths) const {
   std::vector<fs::path> out;
   for (const auto &path : paths) {
     if (fs::is_directory(path)) {
+      if (!isIgnored(path) && canSee(path)) {
+        out.push_back(path);
+      }
       for (const auto &entry : fs::recursive_directory_iterator(path)) {
-        if (canSee(entry.path())) {
+        if (!isIgnored(entry.path()) && canSee(entry.path())) {
           out.push_back(entry.path());
         }
       }
-    } else if (canSee(path)) {
+    } else if (!isIgnored(path) && canSee(path)) {
       out.push_back(path);
     }
   }
   return out;
 }
-
-int View::ls() const {
-  cout << "Listing files..." << endl;
+void View::printTree(const char *str, const char *prefix, int &total) const {
+  std::vector<fs::path> entries;
   try {
-    const std::vector<fs::path> currentDir = {"."};
-    auto filtered = filter(currentDir);
+    for (const auto &entry : fs::directory_iterator(str)) {
+      entries.push_back(entry.path());
+    }
+    std::ranges::sort(entries);
+  } catch (const fs::filesystem_error &) {
+    return;
+  }
 
-    if (filtered.empty()) {
-      cout << "No visible files found for your role." << endl;
-      return 0;
+  for (size_t i = 0; i < entries.size(); ++i) {
+    const auto &entry = entries[i];
+    const bool isLast = (i == entries.size() - 1);
+
+    if (isIgnored(entry)) {
+      continue;
     }
 
-    ranges::sort(filtered);
+    if (fs::is_directory(entry)) {
+      std::cout << prefix << (isLast ? "└── " : "├── ") << "\033[1;34m"
+                << entry.filename().string() << "\033[0m" << std::endl;
+      printTree(entry.c_str(), isLast ? "    " : "│   ", total);
+    } else if (this->canSee(entry)) {
+      total++;
+      const auto bytes = fs::file_size(entry);
+      string size = (bytes < 1024) ? to_string(bytes) + "B"
+                    : (bytes < 1024 * 1024)
+                        ? to_string(bytes / 1024) + "KB"
+                        : to_string(bytes / (1024 * 1024)) + "MB";
 
-    for (const auto &f : filtered) {
-      cout << f.relative_path().string() << endl;
+      std::cout << prefix << (isLast ? "└── " : "├── ")
+                << entry.filename().string() << " \033[90m(" << size
+                << ")\033[0m" << std::endl;
+    }
+  }
+}
+int View::ls() const {
+  cout << "." << endl;
+  try {
+    int totalFiles = 0;
+    this->printTree(".", "", totalFiles);
+
+    if (totalFiles == 0) {
+      cout << "No visible files found for your role." << endl;
+    } else {
+      cout << "\nTotal: " << totalFiles << " visible files." << endl;
     }
     return 0;
   } catch (const fs::filesystem_error &e) {

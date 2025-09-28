@@ -13,6 +13,9 @@ CMakeUserPresets.json
 .env
 *.a
 jah
+.gitignore
+.git
+
 
 # CLion
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
@@ -20,8 +23,9 @@ jah
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #cmake-build-*
-.idea/
+.idea
 .cmake
-.cache/
+.cache
+jah_test[1]_include.cmake
 jah_test
-.jah/
+jah_test[1]_tests.cmake

@@ -84,6 +84,8 @@ public:
 
   filter(const std::vector<fs::path> &paths) const;
 
+  void printTree(const char *str, const char *prefix,
+                 int &total) const;
   int ls() const;
 
 
