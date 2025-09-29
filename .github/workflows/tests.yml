@@ -6,11 +6,10 @@ on:
     branches: [ "main" ]
 jobs:
   build-and-test:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential cmake sqlite3 postgresql-server-dev-all gtk4
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Configure CMake
@@ -20,4 +19,3 @@ jobs:
       - name: Run tests
         working-directory: ./build
         run: ctest -C Release
-
