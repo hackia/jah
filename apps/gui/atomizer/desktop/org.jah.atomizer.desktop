@@ -2,7 +2,7 @@
 Type=Application
 Name=Atomizer
 Exec=atomizer %U
-Icon=org.hackia.atomizer
+Icon=org.jah.atomizer
 Categories=GTK;Development;Utility;
 Terminal=false
 DBusActivatable=true
