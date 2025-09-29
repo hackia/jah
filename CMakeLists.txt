@@ -49,19 +49,19 @@ add_library(api_hub api/hub/include/Discussions.hpp api/hub/src/Discussions.cpp 
 add_library(api_atoms api/atoms/include/Queue.hpp api/atoms/src/Queue.cpp api/atoms/include/Singularity.hpp api/atoms/src/Singularity.cpp api/atoms/include/Atom.hpp api/atoms/src/Atom.cpp api/atoms/include/Forge.hpp api/atoms/src/Forge.cpp)
 add_library(api_branches api/branches/include/Flow.hpp api/branches/src/Flow.cpp api/branches/include/Branches.hpp api/branches/src/Branches.cpp)
 
-add_executable(hub apps/gui/hub/main.cpp)
+add_executable(hub apps/gui/hub/src/main.cpp apps/gui/hub/libs/include/Hub.hpp apps/gui/hub/libs/src/Hub.cpp)
 target_link_libraries(hub api_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
-add_executable(flow apps/gui/flow/main.cpp)
+add_executable(flow apps/gui/flow/src/main.cpp apps/gui/flow/libs/include/Flow.hpp apps/gui/flow/libs/src/Flow.cpp)
 target_link_libraries(flow jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
-add_executable(ji apps/gui/ji/main.cpp)
+add_executable(ji apps/gui/ji/src/main.cpp apps/gui/ji/libs/include/Ji.hpp apps/gui/ji/libs/src/Ji.cpp)
 target_link_libraries(ji jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
 add_executable(jah apps/cli/jah/main.cpp)
 target_link_libraries(jah jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub)
 
-add_executable(atomizer apps/gui/atomizer/main.cpp)
+add_executable(atomizer apps/gui/atomizer/src/main.cpp apps/gui/atomizer/libs/include/Atomizer.hpp apps/gui/atomizer/libs/src/Atomizer.cpp)
 target_link_libraries(atomizer api_atoms ${GTK4_LIBRARIES} CURL::libcurl)
 
 add_executable(atom apps/api/atoms/main.cpp)
@@ -83,10 +83,10 @@ install(TARGETS jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub api_h
 
 # Install desktop files
 install(FILES
-        apps/gui/hub/hub.desktop
-        apps/gui/flow/flow.desktop
-        apps/gui/ji/ji.desktop
-        apps/gui/atomizer/atomizer.desktop
+        apps/gui/hub/desktop/hub.desktop
+        apps/gui/flow/desktop/flow.desktop
+        apps/gui/ji/desktop/ji.desktop
+        apps/gui/atomizer/desktop/atomizer.desktop
         DESTINATION share/applications
 )
 
