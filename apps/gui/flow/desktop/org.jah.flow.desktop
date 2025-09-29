@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Flow
+Comment=A Client interface for jah
+Exec=flow
+Icon=org.jah.flow
+Terminal=false
+Type=Application
+Categories=Development;Utility;

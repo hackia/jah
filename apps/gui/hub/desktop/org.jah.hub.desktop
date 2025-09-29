@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
-Name=Flow
-Comment=A Client interface for jah
-Exec=flow
-Icon=application-x-executable
+Name=Hub
+Comment=Graphical interface for the hub
+Exec=hub
+Icon=org.jah.hub.desktop
 Terminal=false
 Type=Application
 Categories=GTK;Development;Utility;

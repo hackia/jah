@@ -3,14 +3,14 @@
 
 namespace Jah {
 
-constexpr auto APP_ID = "org.hackia.ji";
-constexpr auto WINDOW_TITLE = "Ji";
-constexpr int DEFAULT_WINDOW_WIDTH = 800;  // Increased width
-constexpr int DEFAULT_WINDOW_HEIGHT = 600; // Increased height
+constexpr auto APP_ID = "org.jah.hub";
+constexpr auto WINDOW_TITLE = "Hub";
+constexpr int DEFAULT_WINDOW_WIDTH = 800;
+constexpr int DEFAULT_WINDOW_HEIGHT = 600;
 constexpr int MIN_WINDOW_WIDTH = 400;
 constexpr int MIN_WINDOW_HEIGHT = 300;
 
-class Ji {
+class Hub {
 public:
   static void create_window_content(GtkWidget *window);
   static void on_window_destroy(const GtkWidget *widget, const gpointer *data);

@@ -55,9 +55,6 @@ target_link_libraries(hub api_hub ${GTK4_LIBRARIES} CURL::libcurl)
 add_executable(flow apps/gui/flow/src/main.cpp apps/gui/flow/libs/include/Flow.hpp apps/gui/flow/libs/src/Flow.cpp)
 target_link_libraries(flow jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
-add_executable(ji apps/gui/ji/src/main.cpp apps/gui/ji/libs/include/Ji.hpp apps/gui/ji/libs/src/Ji.cpp)
-target_link_libraries(ji jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES} CURL::libcurl)
-
 add_executable(jah apps/cli/jah/main.cpp)
 target_link_libraries(jah jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub)
 
@@ -71,7 +68,7 @@ add_executable(branches apps/api/branches/main.cpp)
 target_link_libraries(branches api_branches)
 
 # Install executables
-install(TARGETS hub flow ji jah atomizer atom branches
+install(TARGETS hub flow jah atomizer atom branches
         RUNTIME DESTINATION bin
 )
 
@@ -83,8 +80,8 @@ install(TARGETS jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub api_h
 
 # Install desktop files
 install(FILES
-        apps/gui/hub/desktop/hub.desktop
-        apps/gui/flow/desktop/flow.desktop
+        apps/gui/hub/desktop/org.jah.hub.desktop
+        apps/gui/flow/desktop/org.jah.flow.desktop
         apps/gui/ji/desktop/ji.desktop
         apps/gui/atomizer/desktop/org.jah.atomizer.desktop
         DESTINATION share/applications
@@ -92,7 +89,9 @@ install(FILES
 
 # Install desktop files
 install(FILES
-        apps/gui/atomizer/icons/Atomizer/scalable/apps/org.jah.atomizer.svg
+        apps/gui/atomizer/icons/org.jah.atomizer.svg
+        apps/gui/hub/icons/org.jah.hub.svg
+        apps/gui/flow/icons/org.jah.flow.svg
         DESTINATION share/icons/hicolor/scalable/apps/
 )
 

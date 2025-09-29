@@ -1,9 +1,9 @@
-#include "../include/Ji.hpp"
+#include "../include/Flow.hpp"
 #include <stdexcept>
 
 using namespace Jah;
 
-void Ji::create_window_content(GtkWidget *window) {
+void Flow::create_window_content(GtkWidget *window) {
   GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
   gtk_widget_set_margin_start(box, 20);
   gtk_widget_set_margin_end(box, 20);
@@ -12,17 +12,17 @@ void Ji::create_window_content(GtkWidget *window) {
   GtkWidget *header = gtk_label_new(nullptr);
   gtk_label_set_markup(
       GTK_LABEL(header),
-      "<span size='xx-large' weight='bold'>Welcome to Ji</span>");
+      "<span size='xx-large' weight='bold'>Welcome to Flow</span>");
   gtk_widget_set_margin_bottom(header, 20);
   gtk_box_append(GTK_BOX(box), header);
   gtk_window_set_child(GTK_WINDOW(window), box);
 }
-void Ji::on_window_destroy(const GtkWidget *widget, const gpointer *data) {
+void Flow::on_window_destroy(const GtkWidget *widget, const gpointer *data) {
   (void)widget;
   (void)data;
 }
 
-void Ji::setup_window_properties(GtkWidget *window) {
+void Flow::setup_window_properties(GtkWidget *window) {
   gtk_window_set_title(GTK_WINDOW(window), WINDOW_TITLE);
 
   gtk_window_set_default_size(GTK_WINDOW(window), DEFAULT_WINDOW_WIDTH,
@@ -30,7 +30,7 @@ void Ji::setup_window_properties(GtkWidget *window) {
 
   gtk_window_set_resizable(GTK_WINDOW(window), TRUE);
 }
-void Ji::on_activate(GtkApplication *app, gpointer *user_data) {
+void Flow::on_activate(GtkApplication *app, gpointer *user_data) {
   try {
     // Create the main application window
     GtkWidget *window = gtk_application_window_new(app);
@@ -38,12 +38,9 @@ void Ji::on_activate(GtkApplication *app, gpointer *user_data) {
       throw std::runtime_error("Failed to create application window");
     }
     setup_window_properties(window);
-
     create_window_content(window);
     g_signal_connect(window, "destroy", G_CALLBACK(on_window_destroy),
                      user_data);
-
-    // Show the window
     gtk_window_present(GTK_WINDOW(window));
   } catch (const std::exception &e) {
     g_warning("Error activating application: %s", e.what());

@@ -1,11 +1,43 @@
-*
-!.gitignore
-!CMakeLists.txt
-!LICENSE
-!README.md
-!tests
-!libs
-!docs
-!apps
-!api
-!.github
+# CMake build directories
+build/
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Compiled files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDE specific files
+.vs/
+.vscode/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+.idea/
+*.cbp
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.a
+.env
+.cmake/
+.jah/
