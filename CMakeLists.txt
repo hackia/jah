@@ -82,7 +82,6 @@ install(TARGETS jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub api_h
 install(FILES
         apps/gui/hub/desktop/org.jah.hub.desktop
         apps/gui/flow/desktop/org.jah.flow.desktop
-        apps/gui/ji/desktop/ji.desktop
         apps/gui/atomizer/desktop/org.jah.atomizer.desktop
         DESTINATION share/applications
 )
