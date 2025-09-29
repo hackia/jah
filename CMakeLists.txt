@@ -26,8 +26,8 @@ elseif (WIN32)
 else ()
     message(FATAL_ERROR "Unsupported system: ${CMAKE_SYSTEM_NAME}")
 endif ()
-
-
+find_package(CURL REQUIRED)
+find_package(Boost 1.71.0 REQUIRED COMPONENTS system thread)
 find_package(SQLite3 REQUIRED)
 link_directories(${SQLITE_LINK_DIR})
 include_directories(include ${SQLITE_INCLUDE})
@@ -50,22 +50,22 @@ add_library(api_atoms api/atoms/include/Queue.hpp api/atoms/src/Queue.cpp api/at
 add_library(api_branches api/branches/include/Flow.hpp api/branches/src/Flow.cpp api/branches/include/Branches.hpp api/branches/src/Branches.cpp)
 
 add_executable(hub apps/gui/hub/main.cpp)
-target_link_libraries(hub api_hub ${GTK4_LIBRARIES})
+target_link_libraries(hub api_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
 add_executable(flow apps/gui/flow/main.cpp)
-target_link_libraries(flow jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES})
+target_link_libraries(flow jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
 add_executable(ji apps/gui/ji/main.cpp)
-target_link_libraries(ji jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES})
+target_link_libraries(ji jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub ${GTK4_LIBRARIES} CURL::libcurl)
 
 add_executable(jah apps/cli/jah/main.cpp)
 target_link_libraries(jah jah_atoms jah_branch jah_config jah_core jah_hooks jah_hub)
 
 add_executable(atomizer apps/gui/atomizer/main.cpp)
-target_link_libraries(atomizer api_atoms ${GTK4_LIBRARIES})
+target_link_libraries(atomizer api_atoms ${GTK4_LIBRARIES} CURL::libcurl)
 
 add_executable(atom apps/api/atoms/main.cpp)
-target_link_libraries(atom api_atoms)
+target_link_libraries(atom api_atoms Boost::system Boost::thread)
 
 add_executable(branches apps/api/branches/main.cpp)
 target_link_libraries(branches api_branches)
