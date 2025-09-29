@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Atomizer
+Exec=atomizer %U
+Icon=org.hackia.atomizer
+Categories=GTK;Development;Utility;
+Terminal=false
+DBusActivatable=true
+StartupWMClass=org.hackia.atomizer

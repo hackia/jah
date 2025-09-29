@@ -12,8 +12,6 @@ _deps
 CMakeUserPresets.json
 .env
 *.a
-lib/
-bin/
 # CLion
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
@@ -26,10 +24,7 @@ Testing/
 .cache/
 jah_test
 .jah/
-jah
-ji
 branches
-atomizer
 atom
 hub
 flow

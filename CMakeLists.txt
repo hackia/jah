@@ -86,9 +86,16 @@ install(FILES
         apps/gui/hub/desktop/hub.desktop
         apps/gui/flow/desktop/flow.desktop
         apps/gui/ji/desktop/ji.desktop
-        apps/gui/atomizer/desktop/atomizer.desktop
+        apps/gui/atomizer/desktop/org.jah.atomizer.desktop
         DESTINATION share/applications
 )
+
+# Install desktop files
+install(FILES
+        apps/gui/atomizer/icons/Atomizer/scalable/apps/org.jah.atomizer.svg
+        DESTINATION share/icons/hicolor/scalable/apps/
+)
+
 
 # Install headers
 install(DIRECTORY libs/jah/include/ api/hub/include/ api/atoms/include/ api/branches/include/
