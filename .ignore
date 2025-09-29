@@ -12,11 +12,10 @@ _deps
 CMakeUserPresets.json
 .env
 *.a
-jah
 .gitignore
 .git
-
-
+lib
+bin
 # CLion
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
@@ -29,3 +28,4 @@ jah
 jah_test[1]_include.cmake
 jah_test
 jah_test[1]_tests.cmake
+.jah
