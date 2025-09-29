@@ -1,7 +1,3 @@
-//
-// Created by hackia on 9/29/25.
-//
-
 #include <iostream>
 
 int main() {
