@@ -21,97 +21,93 @@ GtkWidget *Atomizer::issues = nullptr;
 const char *Atomizer::types[] = {"feat", "fix", "chore", nullptr};
 const char *Atomizer::tickets[] = {"#0001", "#0003", nullptr};
 
-Atomizer::Atomizer() {}
 void Atomizer::create_window_content(GtkWidget *window) {
-  if (std::filesystem::exists(
-          std::filesystem::current_path().string().append("/.jah"))) {
-    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
-    gtk_widget_set_margin_start(box, 20);
-    gtk_widget_set_margin_end(box, 20);
-    gtk_widget_set_margin_top(box, 20);
-    gtk_widget_set_margin_bottom(box, 20);
-    type_label = gtk_label_new("Type of change");
-    gtk_widget_set_halign(type_label, GTK_ALIGN_START);
-    GtkWidget *dropdown = gtk_drop_down_new_from_strings(types);
-    gtk_widget_set_margin_bottom(dropdown, 10);
-    gtk_box_append(GTK_BOX(box), dropdown);
+  box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+  gtk_widget_set_margin_start(box, 20);
+  gtk_widget_set_margin_end(box, 20);
+  gtk_widget_set_margin_top(box, 20);
+  gtk_widget_set_margin_bottom(box, 20);
+  type_label = gtk_label_new("Type of change");
+  gtk_widget_set_halign(type_label, GTK_ALIGN_START);
+  GtkWidget *dropdown = gtk_drop_down_new_from_strings(types);
+  gtk_widget_set_margin_bottom(dropdown, 10);
+  gtk_box_append(GTK_BOX(box), dropdown);
 
-    title_label = gtk_label_new("Title of change");
-    gtk_widget_set_halign(title_label, GTK_ALIGN_START);
-    gtk_box_append(GTK_BOX(box), title_label);
+  title_label = gtk_label_new("Title of change");
+  gtk_widget_set_halign(title_label, GTK_ALIGN_START);
+  gtk_box_append(GTK_BOX(box), title_label);
 
-    title = gtk_entry_new();
-    gtk_widget_set_margin_bottom(title, 10);
-    gtk_box_append(GTK_BOX(box), title);
+  title = gtk_entry_new();
+  gtk_widget_set_margin_bottom(title, 10);
+  gtk_box_append(GTK_BOX(box), title);
 
-    summary_label = gtk_label_new("Summary of changes");
-    gtk_widget_set_halign(summary_label, GTK_ALIGN_START);
-    gtk_box_append(GTK_BOX(box), summary_label);
+  summary_label = gtk_label_new("Summary of changes");
+  gtk_widget_set_halign(summary_label, GTK_ALIGN_START);
+  gtk_box_append(GTK_BOX(box), summary_label);
 
-    summary = gtk_entry_new();
-    gtk_widget_set_margin_bottom(summary, 10);
-    gtk_box_append(GTK_BOX(box), summary);
+  summary = gtk_entry_new();
+  gtk_widget_set_margin_bottom(summary, 10);
+  gtk_box_append(GTK_BOX(box), summary);
 
-    body_label = gtk_label_new("Details of changes");
-    gtk_widget_set_halign(body_label, GTK_ALIGN_START);
-    gtk_box_append(GTK_BOX(box), body_label);
+  body_label = gtk_label_new("Details of changes");
+  gtk_widget_set_halign(body_label, GTK_ALIGN_START);
+  gtk_box_append(GTK_BOX(box), body_label);
 
-    body = gtk_text_view_new();
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(body), GTK_WRAP_WORD_CHAR);
-    gtk_text_view_set_editable(GTK_TEXT_VIEW(body), TRUE);
-    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(body), TRUE);
-    gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(body), TRUE);
-    gtk_text_view_set_monospace(GTK_TEXT_VIEW(body), TRUE);
-    gtk_text_view_set_indent(GTK_TEXT_VIEW(body), 4);
-    gtk_text_view_set_left_margin(GTK_TEXT_VIEW(body), 4);
-    gtk_text_view_set_right_margin(GTK_TEXT_VIEW(body), 4);
-    gtk_text_view_set_top_margin(GTK_TEXT_VIEW(body), 4);
-    gtk_text_view_set_bottom_margin(GTK_TEXT_VIEW(body), 4);
+  body = gtk_text_view_new();
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(body), GTK_WRAP_WORD_CHAR);
+  gtk_text_view_set_editable(GTK_TEXT_VIEW(body), TRUE);
+  gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(body), TRUE);
+  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(body), TRUE);
+  gtk_text_view_set_monospace(GTK_TEXT_VIEW(body), TRUE);
+  gtk_text_view_set_indent(GTK_TEXT_VIEW(body), 4);
+  gtk_text_view_set_left_margin(GTK_TEXT_VIEW(body), 4);
+  gtk_text_view_set_right_margin(GTK_TEXT_VIEW(body), 4);
+  gtk_text_view_set_top_margin(GTK_TEXT_VIEW(body), 4);
+  gtk_text_view_set_bottom_margin(GTK_TEXT_VIEW(body), 4);
 
-    GtkWidget *body_scroll = gtk_scrolled_window_new();
-    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(body_scroll), body);
-    gtk_widget_set_size_request(body_scroll, -1, 100);
-    gtk_widget_set_margin_bottom(body_scroll, 10);
-    gtk_box_append(GTK_BOX(box), body_scroll);
+  GtkWidget *body_scroll = gtk_scrolled_window_new();
+  gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(body_scroll), body);
+  gtk_widget_set_size_request(body_scroll, -1, 100);
+  gtk_widget_set_margin_bottom(body_scroll, 10);
+  gtk_box_append(GTK_BOX(box), body_scroll);
 
-    notes_label = gtk_label_new("Notes");
-    gtk_widget_set_halign(notes_label, GTK_ALIGN_START);
-    gtk_box_append(GTK_BOX(box), notes_label);
+  notes_label = gtk_label_new("Notes");
+  gtk_widget_set_halign(notes_label, GTK_ALIGN_START);
+  gtk_box_append(GTK_BOX(box), notes_label);
 
-    notes = gtk_text_view_new();
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(notes), GTK_WRAP_WORD_CHAR);
-    GtkWidget *notes_scroll = gtk_scrolled_window_new();
-    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(notes_scroll), notes);
-    gtk_widget_set_size_request(notes_scroll, -1, 100);
-    gtk_widget_set_margin_bottom(notes_scroll, 10);
-    gtk_box_append(GTK_BOX(box), notes_scroll);
+  notes = gtk_text_view_new();
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(notes), GTK_WRAP_WORD_CHAR);
+  GtkWidget *notes_scroll = gtk_scrolled_window_new();
+  gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(notes_scroll), notes);
+  gtk_widget_set_size_request(notes_scroll, -1, 100);
+  gtk_widget_set_margin_bottom(notes_scroll, 10);
+  gtk_box_append(GTK_BOX(box), notes_scroll);
 
-    footer_label = gtk_label_new("Footer");
-    gtk_widget_set_halign(footer_label, GTK_ALIGN_START);
-    gtk_box_append(GTK_BOX(box), footer_label);
+  footer_label = gtk_label_new("Footer");
+  gtk_widget_set_halign(footer_label, GTK_ALIGN_START);
+  gtk_box_append(GTK_BOX(box), footer_label);
 
-    footer = gtk_text_view_new();
-    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(footer), GTK_WRAP_WORD_CHAR);
-    GtkWidget *footer_scroll = gtk_scrolled_window_new();
-    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(footer_scroll), footer);
-    gtk_widget_set_size_request(footer_scroll, -1, 100);
-    gtk_widget_set_margin_bottom(footer_scroll, 10);
-    gtk_box_append(GTK_BOX(box), footer_scroll);
+  footer = gtk_text_view_new();
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(footer), GTK_WRAP_WORD_CHAR);
+  GtkWidget *footer_scroll = gtk_scrolled_window_new();
+  gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(footer_scroll), footer);
+  gtk_widget_set_size_request(footer_scroll, -1, 100);
+  gtk_widget_set_margin_bottom(footer_scroll, 10);
+  gtk_box_append(GTK_BOX(box), footer_scroll);
 
-    GtkWidget *issues_label = gtk_label_new("Issues");
-    gtk_widget_set_halign(issues_label, GTK_ALIGN_START);
-    gtk_box_append(GTK_BOX(box), issues_label);
-    GtkWidget *i = gtk_drop_down_new_from_strings(tickets);
-    gtk_widget_set_margin_bottom(i, 10);
-    gtk_box_append(GTK_BOX(box), i);
-    g_object_set_data(G_OBJECT(window), "issues-dd", i);
-    GtkWidget *submit_button = gtk_button_new_with_label("Create atom");
-    g_signal_connect(submit_button, "clicked",
-                     G_CALLBACK(Atomizer::on_submit_clicked), window);
-    gtk_widget_set_margin_top(submit_button, 20);
-    gtk_box_append(GTK_BOX(box), submit_button);
-    gtk_window_set_child(GTK_WINDOW(window), box);
-  }
+  GtkWidget *issues_label = gtk_label_new("Issues");
+  gtk_widget_set_halign(issues_label, GTK_ALIGN_START);
+  gtk_box_append(GTK_BOX(box), issues_label);
+  GtkWidget *i = gtk_drop_down_new_from_strings(tickets);
+  gtk_widget_set_margin_bottom(i, 10);
+  gtk_box_append(GTK_BOX(box), i);
+  g_object_set_data(G_OBJECT(window), "issues-dd", i);
+  GtkWidget *submit_button = gtk_button_new_with_label("Create atom");
+  g_signal_connect(submit_button, "clicked",
+                   G_CALLBACK(Atomizer::on_submit_clicked), window);
+  gtk_widget_set_margin_top(submit_button, 20);
+  gtk_box_append(GTK_BOX(box), submit_button);
+  gtk_window_set_child(GTK_WINDOW(window), box);
 }
 void Atomizer::on_window_destroy(const GtkWidget *widget,
                                  const gpointer *data) {

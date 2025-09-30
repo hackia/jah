@@ -13,7 +13,6 @@ constexpr int MIN_WINDOW_HEIGHT = 300;
 
 class Atomizer {
 public:
-  Atomizer();
   static void create_window_content(GtkWidget *window);
   static void on_window_destroy(const GtkWidget *widget, const gpointer *data);
   static void on_submit_clicked(const GtkWidget *widget, const gpointer *data);
