@@ -18,7 +18,59 @@ GtkWidget *Atomizer::notes = nullptr;
 GtkWidget *Atomizer::footer_label = nullptr;
 GtkWidget *Atomizer::footer = nullptr;
 GtkWidget *Atomizer::issues = nullptr;
-const char *Atomizer::types[] = {"feat", "fix", "chore", nullptr};
+const char *Atomizer::types[] = {"Star",
+                                 "Comet",
+                                 "Nebula",
+                                 "Pulsar",
+                                 "Quasar",
+                                 "Asteroid Belt",
+                                 "Solar Flare",
+                                 "Dwarf Planet",
+                                 "Terraform",
+                                 "Black Hole",
+                                 "Wormhole",
+                                 "Big Bang",
+                                 "Launch",
+                                 "Lightspeed",
+                                 "Mission Control",
+                                 "Spacewalk",
+                                 "Moon Landing",
+                                 "First Contact",
+                                 "Interstellar Communication",
+                                 "Solar Eclipse",
+                                 "Supernova",
+                                 "Meteor Shower",
+                                 "Cosmic Dawn",
+                                 "Solar Storm",
+                                 "Lunar Transit",
+                                 "Perihelion",
+                                 "Aphelion",
+                                 "White Dwarf",
+                                 "Red Giant",
+                                 "Neutron Star",
+                                 "Binary Star",
+                                 "Brown Dwarf",
+                                 "Quark Star",
+                                 "Rogue Planet",
+                                 "Stellar Nursery",
+                                 "Planetary Nebula",
+                                 "Globular Cluster",
+                                 "Void",
+                                 "Gravity",
+                                 "Dark Matter",
+                                 "Time Dilation",
+                                 "Spacetime",
+                                 "Gravitational Lensing",
+                                 "Cosmic String",
+                                 "Quantum Fluctuation",
+                                 "Hawking Radiation",
+                                 "Quantum Entanglement",
+                                 "Gravitational Redshift",
+                                 "Space Probe",
+                                 "Space Station",
+                                 "Rocket Launch",
+                                 "Space Elevator",
+                                 nullptr};
 const char *Atomizer::tickets[] = {"#0001", "#0003", nullptr};
 
 void Atomizer::create_window_content(GtkWidget *window) {
@@ -30,8 +82,26 @@ void Atomizer::create_window_content(GtkWidget *window) {
   type_label = gtk_label_new("Type of change");
   gtk_widget_set_halign(type_label, GTK_ALIGN_START);
   GtkWidget *dropdown = gtk_drop_down_new_from_strings(types);
+  gtk_drop_down_set_enable_search(GTK_DROP_DOWN(dropdown), TRUE);
+
+  // Build a filterable model for the issues dropdown
+  GtkStringList *type_list = gtk_string_list_new(types);
+  GtkExpression *string_type_expr =
+      gtk_property_expression_new(GTK_TYPE_STRING_OBJECT, nullptr, "string");
+  GtkStringFilter *type_str_filter = gtk_string_filter_new(string_type_expr);
+  gtk_string_filter_set_match_mode(type_str_filter,
+                                   GTK_STRING_FILTER_MATCH_MODE_SUBSTRING);
+  GtkFilterListModel *type_filtered_model = gtk_filter_list_model_new(
+      G_LIST_MODEL(type_list), GTK_FILTER(type_str_filter));
+
+  GtkWidget *type_dropdown =
+      gtk_drop_down_new(G_LIST_MODEL(type_filtered_model), string_type_expr);
+  gtk_drop_down_set_enable_search(GTK_DROP_DOWN(type_dropdown), TRUE);
+  gtk_widget_set_margin_bottom(type_dropdown, 10);
+  gtk_widget_set_margin_top(dropdown, 10);
   gtk_widget_set_margin_bottom(dropdown, 10);
-  gtk_box_append(GTK_BOX(box), dropdown);
+  gtk_box_append(GTK_BOX(box), type_dropdown);
+  g_object_set_data(G_OBJECT(window), "type-dd", type_dropdown);
 
   title_label = gtk_label_new("Title of change");
   gtk_widget_set_halign(title_label, GTK_ALIGN_START);
@@ -57,8 +127,7 @@ void Atomizer::create_window_content(GtkWidget *window) {
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(body), GTK_WRAP_WORD_CHAR);
   gtk_text_view_set_editable(GTK_TEXT_VIEW(body), TRUE);
   gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(body), TRUE);
-  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(body), TRUE);
-  gtk_text_view_set_monospace(GTK_TEXT_VIEW(body), TRUE);
+  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(body), FALSE);
   gtk_text_view_set_indent(GTK_TEXT_VIEW(body), 4);
   gtk_text_view_set_left_margin(GTK_TEXT_VIEW(body), 4);
   gtk_text_view_set_right_margin(GTK_TEXT_VIEW(body), 4);
@@ -73,10 +142,19 @@ void Atomizer::create_window_content(GtkWidget *window) {
 
   notes_label = gtk_label_new("Notes");
   gtk_widget_set_halign(notes_label, GTK_ALIGN_START);
+
   gtk_box_append(GTK_BOX(box), notes_label);
 
   notes = gtk_text_view_new();
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(notes), GTK_WRAP_WORD_CHAR);
+  gtk_text_view_set_editable(GTK_TEXT_VIEW(notes), TRUE);
+  gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(notes), TRUE);
+  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(notes), FALSE);
+  gtk_text_view_set_indent(GTK_TEXT_VIEW(notes), 4);
+  gtk_text_view_set_left_margin(GTK_TEXT_VIEW(notes), 4);
+  gtk_text_view_set_right_margin(GTK_TEXT_VIEW(notes), 4);
+  gtk_text_view_set_top_margin(GTK_TEXT_VIEW(notes), 4);
+  gtk_text_view_set_bottom_margin(GTK_TEXT_VIEW(notes), 4);
   GtkWidget *notes_scroll = gtk_scrolled_window_new();
   gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(notes_scroll), notes);
   gtk_widget_set_size_request(notes_scroll, -1, 100);
@@ -89,6 +167,14 @@ void Atomizer::create_window_content(GtkWidget *window) {
 
   footer = gtk_text_view_new();
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(footer), GTK_WRAP_WORD_CHAR);
+  gtk_text_view_set_editable(GTK_TEXT_VIEW(footer), TRUE);
+  gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(footer), TRUE);
+  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(footer), FALSE);
+  gtk_text_view_set_indent(GTK_TEXT_VIEW(footer), 4);
+  gtk_text_view_set_left_margin(GTK_TEXT_VIEW(footer), 4);
+  gtk_text_view_set_right_margin(GTK_TEXT_VIEW(footer), 4);
+  gtk_text_view_set_top_margin(GTK_TEXT_VIEW(footer), 4);
+  gtk_text_view_set_bottom_margin(GTK_TEXT_VIEW(footer), 4);
   GtkWidget *footer_scroll = gtk_scrolled_window_new();
   gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(footer_scroll), footer);
   gtk_widget_set_size_request(footer_scroll, -1, 100);
@@ -98,10 +184,24 @@ void Atomizer::create_window_content(GtkWidget *window) {
   GtkWidget *issues_label = gtk_label_new("Issues");
   gtk_widget_set_halign(issues_label, GTK_ALIGN_START);
   gtk_box_append(GTK_BOX(box), issues_label);
-  GtkWidget *i = gtk_drop_down_new_from_strings(tickets);
+
+  // Build a filterable model for the issues dropdown
+  GtkStringList *issues_list = gtk_string_list_new(tickets);
+  GtkExpression *string_expr =
+      gtk_property_expression_new(GTK_TYPE_STRING_OBJECT, nullptr, "string");
+  GtkStringFilter *issues_str_filter = gtk_string_filter_new(string_expr);
+  gtk_string_filter_set_match_mode(issues_str_filter,
+                                   GTK_STRING_FILTER_MATCH_MODE_SUBSTRING);
+  GtkFilterListModel *issues_filtered_model = gtk_filter_list_model_new(
+      G_LIST_MODEL(issues_list), GTK_FILTER(issues_str_filter));
+
+  GtkWidget *i =
+      gtk_drop_down_new(G_LIST_MODEL(issues_filtered_model), string_expr);
+  gtk_drop_down_set_enable_search(GTK_DROP_DOWN(i), TRUE);
   gtk_widget_set_margin_bottom(i, 10);
   gtk_box_append(GTK_BOX(box), i);
   g_object_set_data(G_OBJECT(window), "issues-dd", i);
+
   GtkWidget *submit_button = gtk_button_new_with_label("Create atom");
   g_signal_connect(submit_button, "clicked",
                    G_CALLBACK(Atomizer::on_submit_clicked), window);
@@ -149,10 +249,14 @@ void Atomizer::on_submit_clicked(const GtkWidget *widget,
       footer_buffer, &footer_start, &footer_end, FALSE);
   GtkDropDown *issue =
       GTK_DROP_DOWN(g_object_get_data(G_OBJECT(win), "issues-dd"));
-  const auto issue_selected = gtk_drop_down_get_selected(issue);
+  gpointer sel_item = gtk_drop_down_get_selected_item(issue);
+  GtkStringObject *issue_str_obj =
+      sel_item ? GTK_STRING_OBJECT(sel_item) : nullptr;
+  const char *issue_text =
+      issue_str_obj ? gtk_string_object_get_string(issue_str_obj) : "";
 
   cout << "Type: " << types[type] << endl;
-  cout << "Issue: " << tickets[issue_selected] << endl;
+  cout << "Issue: " << (issue_text ? issue_text : "") << endl;
   cout << "Title: " << title_text << endl;
   cout << "Summary: " << summary_text << endl;
   cout << "Body: " << body_text << endl;
