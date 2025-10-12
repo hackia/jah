@@ -36,6 +36,7 @@ find_package(PostgreSQL REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK4 REQUIRED gtk4)
 include_directories(${GTK4_INCLUDE_DIRS})
+link_directories(${GTK4_LIBRARY_DIRS})
 
 
 add_library(jah_atoms libs/jah/src/atoms/Forge.cpp libs/jah/src/atoms/Atom.cpp libs/jah/src/atoms/Singularity.cpp libs/jah/src/atoms/Queue.cpp libs/jah/include/atoms/Forge.hpp libs/jah/include/atoms/Atom.hpp libs/jah/include/atoms/Singularity.hpp libs/jah/include/atoms/Queue.hpp)
@@ -86,7 +87,7 @@ install(FILES
         DESTINATION share/applications
 )
 
-# Install desktop files
+# Install icons
 install(FILES
         apps/gui/atomizer/icons/org.jah.atomizer.svg
         apps/gui/hub/icons/org.jah.hub.svg
