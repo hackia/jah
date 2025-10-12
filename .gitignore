@@ -41,3 +41,4 @@ Thumbs.db
 .env
 .cmake/
 .jah/
+build
