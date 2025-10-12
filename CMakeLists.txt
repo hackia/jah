@@ -32,11 +32,11 @@ find_package(SQLite3 REQUIRED)
 link_directories(${SQLITE_LINK_DIR})
 include_directories(include ${SQLITE_INCLUDE})
 find_package(PostgreSQL REQUIRED)
-
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTK4 REQUIRED gtk4)
+# Setup CMake to use GTK+, tell the compiler where to look for headers
+# and to the linker where to look for libraries
 include_directories(${GTK4_INCLUDE_DIRS})
 link_directories(${GTK4_LIBRARY_DIRS})
+add_definitions(${GTK4_CFLAGS_OTHER})
 
 
 add_library(jah_atoms libs/jah/src/atoms/Forge.cpp libs/jah/src/atoms/Atom.cpp libs/jah/src/atoms/Singularity.cpp libs/jah/src/atoms/Queue.cpp libs/jah/include/atoms/Forge.hpp libs/jah/include/atoms/Atom.hpp libs/jah/include/atoms/Singularity.hpp libs/jah/include/atoms/Queue.hpp)
