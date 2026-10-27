@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+cubefs = "0.1.1"
 jinshu = "0.1.0"
 kpack = "0.1.0"
 noun = "0.1.0"
+wuu = { version = "0.1.1", features = ["linux-keyboard"] }

@@ -5,7 +5,7 @@ pub extern "C" fn main() -> ! {
     loop {}
 }
 
-#[cfg_attr(not(test), track_caller)]
+#[cfg_attr(not(test), panic_handler)]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
     loop {}
 }
